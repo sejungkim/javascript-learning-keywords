@@ -238,3 +238,60 @@ value === 1 ? console.log('one')
 
 ----------
 
+### 8. eval 은 무엇인가?
+
+#### 8.1. 설명
+
+##### 8.1.1. eval() 이란?
+
+- eval()은 문자열로 된 코드를 평가하고 수행한 후 결과값을 반환하는 함수이다.
+- `eval('2 + 2') === 4`
+
+##### 8.1.2. eval()의 단점
+
+eval 함수는 동적으로 코드를 생성하고 실행하는 편리하고 쉬운 방법이지만 아래와 같은 여러 단점들이 있기 때문에 최대한 사용을 피하는 게 좋다.
+
+- eval 함수는 eval이 접근할 수 있는 scope내의 변수들을 너무 쉽게 변경시킬 수 있기 때문에 코드의 예측을 어렵게 한다.
+- 디버깅이 어렵다. (eval함수로 사용되는 코드는 줄번호가 없다.)
+- eval 함수는 최신 자바스크립트 엔진에 최적화되어있지 않기 때문에 매우 느리다.
+- eval 함수 사용이 보안을 취약하게 만들 가능성이 있다. (사용자 입력에 관한 보안 이슈가 있다.)
+
+##### 8.1.3. eval() 대신 사용하기
+
+- 동적으로 객체 속성에 접근할 때 속성 접근자를 사용하기
+
+  `eval( 'var result = obj.' + propName );` 대신 `var result = obj[ propName ];`
+
+- 짧은 코드를 평가하고 수행할 때 함수 생성자 또는 함수를 사용하기
+
+  - eval 대신 함수 생성자 사용
+
+    ```javascript
+    function looseJsonParse(obj){
+        return eval(obj);
+    }
+    console.log(looseJsonParse(
+       "{a:(4-1), b:function(){}, c:new Date()}"
+    ))
+    ```
+
+    ```javascript
+    function looseJsonParse(obj){
+        return Function('"use strict";return (' + obj + ')')();
+    }
+    console.log(looseJsonParse(
+       "{a:(4-1), b:function(){}, c:new Date()}"
+    ))
+    ```
+
+  - 문자열 대신 함수 사용
+
+    `setTimeout(" ... ", 1000);` 대신 `setTimeout(function() { ... }, 1000);`
+
+- JSON 데이터를 다룰 때  JSON.parse를 이용하기
+
+#### 8.2. 느낀 점
+
+eval 함수는 이번에 처음 알게 됐는데 어떤 상황에 어떤 방식으로 편리하게 쓸 수 있는지는 잘 모르겠지만, 단점이 많은 함수인 것 같아서 혹시 사용할 일이 있어도 최대한 다른 방식으로 문제를 해결해야겠다는 생각이 들었다. 하지만 eval 함수가 과거의 흔적(?)으로 생각보다 많은 곳에 사용돼있다고 하니, 이번 공부가 레거시 코드를 해석하거나 수정해야 할 일이 생겼을 때 유용할 것 같다.
+
+----------
