@@ -295,3 +295,84 @@ eval 함수는 동적으로 코드를 생성하고 실행하는 편리하고 쉬
 eval 함수는 이번에 처음 알게 됐는데 어떤 상황에 어떤 방식으로 편리하게 쓸 수 있는지는 잘 모르겠지만, 단점이 많은 함수인 것 같아서 혹시 사용할 일이 있어도 최대한 다른 방식으로 문제를 해결해야겠다는 생각이 들었다. 하지만 eval 함수가 과거의 흔적(?)으로 생각보다 많은 곳에 사용돼있다고 하니, 이번 공부가 레거시 코드를 해석하거나 수정해야 할 일이 생겼을 때 유용할 것 같다.
 
 ----------
+
+### 9. 변수값을 출력할 때 null, undefined, is not defined로 출력되는 차이점은 무엇인가?
+
+#### 9.1. 설명
+
+##### 9.1.1. null
+
+`null` 은 자바스크립트에서 일반적으로 어떤 객체 값의 '의도적인 없음'을 나타내는 값이다. 따라서 다음과 같은 경우를 가진 변수에 접근했을 때 `null` 이 출력된다.
+
+- 고의로 변수의 값이 '없음'을 표현하기 위해 변수에 직접 `null` 을 할당했을 때
+
+  ```javascript
+  let value = null; // value is null
+  ```
+
+- 특정 조건에 해당하는 객체의 값을 찾지 못했을 때 반환
+
+  ```javascript
+  let value = 'abc'.match(/[0-9]/); // value is null
+  let saveButton = document.getElementById("save"); // saveButton is null
+  ```
+
+##### 9.1.2. undefined
+
+`undefined` 는 일반적으로 값이 할당되지 않은 변수의 기본값으로 사용된다. 자바스크립트에서는 많은 경우에 `undefined` 가 출력되는데 대표적으로 다음과 같은 경우에 `undefined` 가 출력된다.
+
+- 선언만 되고 아직 초기값이 할당되지 않은 변수에 접근했을 때
+
+  ```javascript
+  let value;
+  console.log(value); // value is undefined
+  ```
+
+- 함수에 정의된 매개변수에 인자가 들어오지 않는 경우
+
+  ```javascript
+  function sum(val1, val2) {
+    return val1 + val2; // val2 is undefined
+  }
+  
+  sum(5);
+  ```
+
+- 함수에서 어떤 값도 반환하지 않는 경우
+
+  ```javascript
+  function sum(val1, val2) {
+    let result = val1 + val2;
+  }
+  
+  let result = sum(5, 5); // result is undefined
+  ```
+
+##### 9.1.3. "x" is not defined
+
+`"x" is not defined` 는 ReferenceError 타입의 하나로 전체 에러 메세지는  `ReferenceError: "x" is not defined` 이다. 존재하지 않는 변수를 어딘가에서 참조했을 때 나타나는 에러 메세지이다. 대표적으로 다음과 같은 경우에 이 에러 메세지를 출력한다.
+
+- 변수가 선언되지 않았을 때
+
+  ```javascript
+  console.log(value); // ReferenceError: value is not defined
+  let value;
+  ```
+
+- 잘못된 scope에서 접근했을 때
+
+  ```javascript
+  function numbers() {
+    let num = 1;
+    return num;
+  }
+  
+  console.log(num); // ReferenceError: num is not defined.
+  ```
+
+#### 9.2. 느낀 점
+
+`null` 과 `undefined` 에 대해서 명확히 알게 되었고, 어떨 때 `is not defined` 라는 에러를 마주치는지도 알게 되어서 프로그램을 구현하며 생기는 문제를 좀 더 쉽게 해결할 수 있을 것 같다. 또, 변수를 선언한 후 최대한 초기값을 할당하고 사용하는 게 문제를 발생시킬 확률을 낮춰줄 수 있을 것 같다고 생각했다.
+
+----------
+
