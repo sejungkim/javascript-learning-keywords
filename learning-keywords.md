@@ -376,3 +376,36 @@ eval 함수는 이번에 처음 알게 됐는데 어떤 상황에 어떤 방식�
 
 ----------
 
+### 10. add(10)(2) //12 가 되도록 구현해보기
+
+#### 10.1. 설명
+
+- add 함수는 '다음 인자를 받는 함수'를 반환하는 함수이다.
+- add 함수에서 반환되는 함수는 입력받은 2개의 인자를 계산하고 반환한다.
+- 위의 내용을 코드로 구현하면 다음과 같다.
+
+  ```javascript
+  function add(num1) {
+    return function (num2) {
+      return num1 + num2;
+    }
+  }
+  
+  const result = add(10)(2); // result is 12
+  ```
+
+  이처럼 add 함수에서 반환된 익명 함수에서 지역 scope를 벗어난 변수 num1에 접근하고 사용할 수 있는 이유는 closure 개념 때문이다. closure란, 어떤 함수가 생성되는 시점에 존재하는 execution context와 lexical environment를 포함하는 접근할 수 있는 모든 환경을 뜻한다.
+
+- 위의 코드를 arrow function으로 다음과 같이 간결하게 바꿀 수 있다.
+
+  ```javascript
+  const add = num1 => num2 => num1 + num2;
+  const result = add(10)(2); // result is 12
+  ```
+
+#### 10.2. 느낀 점
+
+이번 질문은 이미 예전에 pipe 함수를 통해 함수를 반환하는 함수를 연습해 본 적이 있어서 쉽게 해결할 수 있었다. 하지만 closure는 여러 번 본 개념임에도 불구하고 아는 것 같았지만 짧고 명확하게 설명하기가 어렵다고 느꼈다. closure와 관련 있는 개념들에 대해 기회가 될 때 좀 더 자세히 공부해보고 싶다.
+
+----------
+
